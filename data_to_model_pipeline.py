@@ -264,3 +264,38 @@ print("\nXGBClassifier results")
 print("Accuracy:", accuracy_score(y_clf_test, y_clf_pred))
 print(classification_report(y_clf_test, y_clf_pred, zero_division=0))
 
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score, davies_bouldin_score
+
+'''
+features = ['temperature_C', 'humidity_percent',
+            'precipitation_mm', 'snowfall_mm', 'wind_direction_deg',
+            'wind_speed_kmh', 'pressure_hPa', 'hour', 'day']
+'''
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(df_all[features])
+X_train, X_test = train_test_split(X_scaled, test_size=0.2, random_state=42)
+
+inertia_vals = []
+silhouette_vals = []
+
+for k in range(2, 11):
+  kmeans = KMeans(n_clusters=k, n_init=10, random_state=42)
+  preds = kmeans.fit_predict(X_train)
+  inertia_vals.append(kmeans.inertia_)
+  silhouette_vals.append(silhouette_score(X_train, preds))
+
+optim_k_idx = silhouette_vals.index(max(silhouette_vals))
+optim_silhouette_val = silhouette_vals[optim_k_idx]
+optim_inertia_val = inertia_vals[optim_k_idx]
+
+best_kmeans = KMeans(n_clusters=optim_k_idx + 2, n_init=10, random_state=42)
+best_preds = best_kmeans.fit_predict(X_scaled)
+best_silhouette_val = silhouette_score(X_scaled, best_preds)
+best_inertia_val = best_kmeans.inertia_
+
+print(f'Metrics used are Inertia (Lower values means more tightly clustered) and Silhouette (ranges from 0 where samples are in the wrong cluster to 1 where samples are well-separated from other clusters)')
+print(f'Best k-value: {optim_k_idx + 2}') # +2 for index adjustment
+print(f'Best Silhouette: {best_silhouette_val:.3f}')
+print(f'Best Inertia: {best_inertia_val:.3f}')

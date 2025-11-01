@@ -264,6 +264,7 @@ print("\nXGBClassifier results")
 print("Accuracy:", accuracy_score(y_clf_test, y_clf_pred))
 print(classification_report(y_clf_test, y_clf_pred, zero_division=0))
 
+import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, davies_bouldin_score
 
@@ -295,7 +296,13 @@ best_preds = best_kmeans.fit_predict(X_scaled)
 best_silhouette_val = silhouette_score(X_scaled, best_preds)
 best_inertia_val = best_kmeans.inertia_
 
-print(f'Metrics used are Inertia (Lower values means more tightly clustered) and Silhouette (ranges from 0 where samples are in the wrong cluster to 1 where samples are well-separated from other clusters)')
+# print(f'Metrics used are Inertia (Lower values means more tightly clustered) and Silhouette (ranges from 0 where samples are in the wrong cluster to 1 where samples are well-separated from other clusters)')
 print(f'Best k-value: {optim_k_idx + 2}') # +2 for index adjustment
 print(f'Best Silhouette: {best_silhouette_val:.3f}')
-print(f'Best Inertia: {best_inertia_val:.3f}')
+# print(f'Best Inertia: {best_inertia_val:.3f}')
+
+# Getting R^2-like metric for comparison
+kmeans_TSS = np.sum((X_scaled - X_scaled.mean(axis=0))**2) # total sum of squares
+kmeans_WSS = best_inertia_val # within-cluster sum of squares
+kmeans_r2like = 1 - (kmeans_WSS / kmeans_TSS)
+print(f'KMeans R^2-like value: {kmeans_r2like:.3f}')

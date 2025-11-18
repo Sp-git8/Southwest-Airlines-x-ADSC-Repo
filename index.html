@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Southwest X Aggie Data Science Club</title>
+    <title></title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: black;
             color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-y: hidden;
+            
         }
 
         h1 {
@@ -36,7 +37,15 @@
         }
 
         #dropdown {
-            margin: 20px 0;
+            display: none; /* Hide the default dropdown */
+        }
+
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
             background: #1a1a1a;
             color: #ffffff;
             border: none;
@@ -48,50 +57,199 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
-            appearance: none;
-            position: relative;
         }
 
-        #dropdown:hover {
+        .dropdown-button:hover {
             background: #333333;
-            color: #ffffff;
         }
 
-        #dropdown:focus {
-            outline: none;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-
-        #dropdown::after {
-            content: '\25BC';
+        .dropdown-menu {
+            display: none;
             position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            color: #ffffff;
-        }
-
-        #dropdown option {
             background: #1a1a1a;
-            color: #ffffff;
-            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 5px;
+            z-index: 1000;
+            max-height: 160px; /* Limit to 3.5 items at a time */
+            overflow-y: auto; /* Enable scrolling for additional items */
         }
 
-        #dropdown option:hover {
-            background: #333333;
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
             color: #ffffff;
+            text-align: center; /* Centered text */
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border-bottom: 1px solid white; /* Add white lines between dropdown items */
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none; /* Remove the line for the last item */
+        }
+
+        .dropdown-item:hover {
+            background: #333333;
+        }
+
+        /* Adjusted styles for the gradient bar and labels */
+        #key {
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+        }
+
+        .key-bar {
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to right, #00e400, #a3e400, #ffff00, #ffcc00, #ff7e00, #ff3f00, #ff0000, #a3005c, #8f3f97);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .key-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .key-label {
+            font-size: 14px;
+            color: #ffffff;
+            font-family: inherit; /* Match the font of the dropdown button */
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .custom-popup {
+            background: black !important;
+            border: 1px solid black !important;
+            border-radius: 5px !important;
+            color: white !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important;
+        }
+
+        .custom-popup .leaflet-popup-content-wrapper {
+            background: black !important;
+            border-radius: 5px !important;
+        }
+
+        .custom-popup .leaflet-popup-tip {
+            background: black !important;
+        }
+
+        .dropdown-menu::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .dropdown-menu::-webkit-scrollbar-thumb {
+            background: #333333;
+            border-radius: 4px;
+        }
+
+        .dropdown-menu::-webkit-scrollbar-thumb:hover {
+            background: #555555;
+        }
+
+        h1 {
+            display: none;
+        }
+
+        /* Added styles for the reset button */
+        #reset-view {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #reset-view:hover {
+            background: #333333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: -14px;
+            font-size: 16px;
+            font-family: inherit; /* Match the font of the dropdown button */
+            color: #ffffff;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .leaflet-control-zoom-in,
+        .leaflet-control-zoom-out {
+            background: black !important; /* Black background */
+            color: white !important; /* White symbols */
+            border: none !important; /* Remove gray border */
+            border-radius: 50%; /* Ensure buttons are circular */
+            width: 40px; /* Set equal width and height for perfect circle */
+            height: 40px; /* Set equal width and height for perfect circle */
+            display: flex !important; /* Use flexbox for centering */
+            align-items: center !important; /* Center content vertically */
+            justify-content: center !important; /* Center content horizontally */
+            font-size: 18px; /* Adjust font size */
+            cursor: pointer;
+            box-sizing: border-box; /* Ensure padding and border do not affect dimensions */
+            transform: rotate(180deg); /* Flip the circle around the symbols */
+        }
+
+        .leaflet-bar {
+            border: none !important; /* Remove gray border from leaflet control container */
+            box-shadow: none !important; /* Remove shadow */
+        }
+
+        .leaflet-control-custom {
+            border: none !important; /* Remove border from custom control */
+            box-shadow: none !important; /* Remove shadow from custom control */
         }
     </style>
 </head>
 <body>
     <h1>Southwest X Aggie Data Science Club</h1>
     <div id="map"></div>
-    <select id="dropdown">
-        <option value="">Select an airport</option>
-    </select>
+
+    <h2 style="text-align: center; margin-bottom: -14px; font-size: 16px;">Weather Score</h2>
+
+    <div id="key">
+        <div class="key-bar"></div>
+        <div class="key-labels">
+            <span class="key-label">0</span>
+            <span class="key-label">20</span>
+            <span class="key-label">40</span>
+            <span class="key-label">60</span>
+            <span class="key-label">80</span>
+            <span class="key-label">100</span>
+        </div>
+    </div>
+
+    <div class="dropdown-container">
+        <button class="dropdown-button">Select an airport</button>
+        <div class="dropdown-menu">
+            <!-- Airport buttons will be dynamically added here -->
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
     <script>
         // Example data for airports and their scores
         const airports = [
@@ -109,10 +267,14 @@
             attributionControl: false // Disable OpenStreetMap attribution
         });
 
-        // Add OpenStreetMap tiles
+        // Add OpenStreetMap tiles with blue oceans
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
+            maxZoom: 19,
+            attribution: ''
         }).addTo(map);
+
+        // Remove the GeoJSON layer logic entirely and set the map view directly
+        map.setView([37.0902, -95.7129], 4); // Centered on the US with zoom level 4
 
         // Function to determine circle color based on AQI-like score scaled to 0-100
         function getColor(score) {
@@ -123,37 +285,82 @@
             return "#8f3f97"; // Purple
         }
 
+        // Function to determine circle size based on score (0-100)
+        function getCircleSize(score) {
+            const minSize = 5000; // Reduced minimum radius in meters
+            const maxSize = 100000; // Increased maximum radius in meters
+            return minSize + (maxSize - minSize) * (score / 100);
+        }
+
         // Add circles for airports and populate dropdown
-        const dropdown = document.getElementById('dropdown');
+        const dropdownButton = document.querySelector('.dropdown-button');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
         const markers = {};
 
         airports.forEach(airport => {
             const color = getColor(airport.score);
+            const size = getCircleSize(airport.score); // Calculate size based on score
 
             const marker = L.circle([airport.lat, airport.lon], {
                 color: color,
                 fillColor: color,
                 fillOpacity: 0.7,
-                radius: 20000 // Radius in meters
+                radius: size // Use dynamic size
             }).addTo(map)
-            .bindPopup(`<b>${airport.name}</b><br>Score: ${airport.score}`);
+            .bindPopup(L.popup({
+                className: 'custom-popup',
+                closeButton: false
+            }).setContent(`<div style='color: white; padding: 5px;'>Score: ${airport.score}</div>`));
+
+            const popupStyle = document.createElement('style');
+            popupStyle.innerHTML = `
+                .custom-popup {
+                    background: black !important;
+                    border: 1px solid black !important;
+                    border-radius: 5px !important;
+                    color: white !important;
+                }
+                .custom-popup .leaflet-popup-content-wrapper {
+                    background: black !important;
+                    border-radius: 5px !important;
+                }
+                .custom-popup .leaflet-popup-tip {
+                    background: black !important;
+                }
+            `;
+            document.head.appendChild(popupStyle);
 
             markers[airport.code] = marker;
 
-            // Add airport to dropdown
-            const option = document.createElement('option');
-            option.value = airport.code;
-            option.textContent = airport.name;
-            dropdown.appendChild(option);
+            // Add airport to dropdown menu
+            const button = document.createElement('div');
+            button.className = 'dropdown-item';
+            button.textContent = `${airport.name.replace('International Airport', 'International')} (${airport.code})`;
+            button.addEventListener('click', () => {
+                const marker = markers[airport.code];
+                if (marker) {
+                    map.setView(marker.getLatLng(), 10); // Zoom to the airport
+                }
+                dropdownMenu.classList.remove('show'); // Close the dropdown menu
+            });
+            dropdownMenu.appendChild(button);
         });
 
-        // Zoom in on selected airport
-        dropdown.addEventListener('change', (event) => {
-            const airportCode = event.target.value;
-            if (airportCode && markers[airportCode]) {
-                const marker = markers[airportCode];
-                map.setView(marker.getLatLng(), 10); // Zoom level 10
-                marker.openPopup();
+        // Toggle dropdown menu visibility
+        dropdownButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Close dropdown menu if clicked outside
+        window.addEventListener('click', (event) => {
+            if (!event.target.matches('.dropdown-button')) {
+                const dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
             }
         });
 
@@ -176,6 +383,26 @@
 
         // Example usage of dynamic update
         // updateAirportScore('LAX', 45); // Uncomment to test dynamic update
+
+        // Define the original view coordinates and zoom level
+        const originalView = {
+            center: [37.0902, -95.7129], // Centered on the US
+            zoom: 4
+        };
+
+        // Add a custom control for the Reset View button
+        const resetControl = L.control({ position: 'topleft' });
+
+        resetControl.onAdd = function () {
+            const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
+            div.innerHTML = '<button style="background: #1a1a1a; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; box-shadow: none;">Reset</button>';
+            div.onclick = function () {
+                map.setView(originalView.center, originalView.zoom);
+            };
+            return div;
+        };
+
+        resetControl.addTo(map);
     </script>
 </body>
 </html>

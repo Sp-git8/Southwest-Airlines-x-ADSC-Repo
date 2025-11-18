@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Southwest X Aggie Data Science Club</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #map {
+            width: 90%;
+            height: 500px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+        }
+
+        #dropdown {
+            margin: 20px 0;
+            background: #1a1a1a;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            position: relative;
+        }
+
+        #dropdown:hover {
+            background: #333333;
+            color: #ffffff;
+        }
+
+        #dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        #dropdown::after {
+            content: '\25BC';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #ffffff;
+        }
+
+        #dropdown option {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 10px;
+        }
+
+        #dropdown option:hover {
+            background: #333333;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Southwest X Aggie Data Science Club</h1>
+    <div id="map"></div>
+    <select id="dropdown">
+        <option value="">Select an airport</option>
+    </select>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+        // Example data for airports and their scores
+        const airports = [
+            { name: "Los Angeles International Airport", code: "LAX", lat: 33.9416, lon: -118.4085, score: 85 },
+            { name: "John F. Kennedy International Airport", code: "JFK", lat: 40.6413, lon: -73.7781, score: 70 },
+            { name: "Chicago O'Hare International Airport", code: "ORD", lat: 41.9742, lon: -87.9073, score: 90 },
+            { name: "Dallas/Fort Worth International Airport", code: "DFW", lat: 32.8998, lon: -97.0403, score: 60 },
+            { name: "Denver International Airport", code: "DEN", lat: 39.8561, lon: -104.6737, score: 50 }
+        ];
+
+        // Initialize map
+        const map = L.map('map', {
+            center: [37.0902, -95.7129], // Centered on the US
+            zoom: 4,
+            attributionControl: false // Disable OpenStreetMap attribution
+        });
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Function to determine circle color based on AQI-like score scaled to 0-100
+        function getColor(score) {
+            if (score <= 20) return "#00e400"; // Green
+            if (score <= 40) return "#ffff00"; // Yellow
+            if (score <= 60) return "#ff7e00"; // Orange
+            if (score <= 80) return "#ff0000"; // Red
+            return "#8f3f97"; // Purple
+        }
+
+        // Add circles for airports and populate dropdown
+        const dropdown = document.getElementById('dropdown');
+        const markers = {};
+
+        airports.forEach(airport => {
+            const color = getColor(airport.score);
+
+            const marker = L.circle([airport.lat, airport.lon], {
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.7,
+                radius: 20000 // Radius in meters
+            }).addTo(map)
+            .bindPopup(`<b>${airport.name}</b><br>Score: ${airport.score}`);
+
+            markers[airport.code] = marker;
+
+            // Add airport to dropdown
+            const option = document.createElement('option');
+            option.value = airport.code;
+            option.textContent = airport.name;
+            dropdown.appendChild(option);
+        });
+
+        // Zoom in on selected airport
+        dropdown.addEventListener('change', (event) => {
+            const airportCode = event.target.value;
+            if (airportCode && markers[airportCode]) {
+                const marker = markers[airportCode];
+                map.setView(marker.getLatLng(), 10); // Zoom level 10
+                marker.openPopup();
+            }
+        });
+
+        // Example function to dynamically update scores and circle colors
+        function updateAirportScore(airportCode, newScore) {
+            if (markers[airportCode]) {
+                const marker = markers[airportCode];
+                const newColor = getColor(newScore);
+
+                // Update marker color
+                marker.setStyle({
+                    color: newColor,
+                    fillColor: newColor
+                });
+
+                // Update popup content
+                marker.setPopupContent(`<b>${airportCode}</b><br>Score: ${newScore}`);
+            }
+        }
+
+        // Example usage of dynamic update
+        // updateAirportScore('LAX', 45); // Uncomment to test dynamic update
+    </script>
+</body>
+</html>

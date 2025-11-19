@@ -253,16 +253,63 @@
     <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
     <script>
         const airports = [
-            { name: "Los Angeles International Airport", code: "LAX", lat: 33.9416, lon: -118.4085, score: 85 },
-            { name: "John F. Kennedy International Airport", code: "JFK", lat: 40.6413, lon: -73.7781, score: 70 },
-            { name: "Chicago O'Hare International Airport", code: "ORD", lat: 41.9742, lon: -87.9073, score: 90 },
-            { name: "Dallas/Fort Worth International Airport", code: "DFW", lat: 32.8998, lon: -97.0403, score: 60 },
-            { name: "Denver International Airport", code: "DEN", lat: 39.8561, lon: -104.6737, score: 50 },
-            { name: "San Francisco International Airport", code: "SFO", lat: 37.7749, lon: -122.4194, score: 75 },
-            { name: "Seattle-Tacoma International Airport", code: "SEA", lat: 47.6062, lon: -122.3321, score: 65 },
-            { name: "Miami International Airport", code: "MIA", lat: 25.7617, lon: -80.1918, score: 55 },
-            { name: "Hartsfield-Jackson Atlanta International Airport", code: "ATL", lat: 33.6407, lon: -84.4277, score: 95 },
-            { name: "Phoenix Sky Harbor International Airport", code: "PHX", lat: 33.4484, lon: -112.0740, score: 80 }
+            { name: "Ted Stevens Anchorage International Airport", code: "ANC", lat: 61.1743, lon: -149.9985, weather_score: 29.24469508, 
+                temperature_C_norm: 0, dew_point_C_norm: 0.06372292297, humidity_percent_norm: 0.8820701153, precipitation_mm_norm: 0.3060070594, 
+                wind_direction_deg_norm: 0.1926328762, wind_speed_kmh_norm: 0.1743513305, pressure_hPa_norm: 0, snow_mm_norm: 0.4551895855 },        
+            { name: "Hartsfield-Jackson Atlanta International Airport", code: "ATL", lat: 33.6407, lon: -84.4277, weather_score: 63.87086243, 
+                temperature_C_norm: 0.6444926261, dew_point_C_norm: 0.578161204, humidity_percent_norm: 0.7565555725, precipitation_mm_norm: 0.5727854378, 
+                wind_direction_deg_norm: 0.7502179573, wind_speed_kmh_norm: 0.451524885, pressure_hPa_norm: 1, snow_mm_norm: 0.01457174227 },
+            { name: "Logan International Airport", code: "BOS", lat: 42.3656, lon: -71.0096, weather_score: 59.80568542, 
+                temperature_C_norm: 0.3109055615, dew_point_C_norm: 0.2848245349, humidity_percent_norm: 0.7679372573, precipitation_mm_norm: 0.5320211833, 
+                wind_direction_deg_norm: 0.9840470254, wind_speed_kmh_norm: 0.914784051, pressure_hPa_norm: 0.7587548335, snow_mm_norm: 0.4551895855 },
+            { name: "Charlotte Douglas International Airport", code: "CLT", lat: 35.2144, lon: -80.9473, weather_score: 58.54772416, 
+                temperature_C_norm: 0.6088329337, dew_point_C_norm: 0.5236018746, humidity_percent_norm: 0.7363163991, precipitation_mm_norm: 0.5142998455, 
+                wind_direction_deg_norm: 0.2756310335, wind_speed_kmh_norm: 0.1405530197, pressure_hPa_norm: 0.9723252746, snow_mm_norm: 0.0397160763 },
+            { name: "Denver International Airport", code: "DEN", lat: 39.8561, lon: -104.6737, weather_score: 37.47503449, 
+                temperature_C_norm: 0.247601397, dew_point_C_norm: 0.01946746259, humidity_percent_norm: 0.5092011034, precipitation_mm_norm: 0.1410299286, 
+                wind_direction_deg_norm: 0.6592487993, wind_speed_kmh_norm: 0.7848527541, pressure_hPa_norm: 0.52314992, snow_mm_norm: 0.4551895855 },
+            { name: "William P. Hobby Airport", code: "HOU", lat: 29.6454, lon: -95.2789, weather_score: 85.01414823, 
+                temperature_C_norm: 0.8340925655, dew_point_C_norm: 0.8316581294, humidity_percent_norm: 0.8879720693, precipitation_mm_norm: 0.6012834964, 
+                wind_direction_deg_norm: 0, wind_speed_kmh_norm: 0.293063245, pressure_hPa_norm: 0.8852084316, snow_mm_norm: 0.3830074959 },
+            { name: "Washington Dulles International Airport", code: "IAD", lat: 38.9531, lon: -77.4565, weather_score: 66.17411643, 
+                temperature_C_norm: 0.4780878883, dew_point_C_norm: 0.4105056681, humidity_percent_norm: 0.7401809154, precipitation_mm_norm: 0.5561327797, 
+                wind_direction_deg_norm: 0.5350664828, wind_speed_kmh_norm: 0.2766345273, pressure_hPa_norm: 0.8756008732, snow_mm_norm: 0.4331518685 },
+            { name: "George Bush Intercontinental Airport", code: "IAH", lat: 29.9902, lon: -95.3368, weather_score: 72.46685121, 
+                temperature_C_norm: 0.7861085978, dew_point_C_norm: 0.8104258622, humidity_percent_norm: 0.9349983553, precipitation_mm_norm: 0.6449552677, 
+                wind_direction_deg_norm: 0.0567055052, wind_speed_kmh_norm: 0.2296314558, pressure_hPa_norm: 0.85582781, snow_mm_norm: 0 },
+            { name: "John F. Kennedy International Airport", code: "JFK", lat: 40.6413, lon: -73.7781, weather_score: 89.27551623, 
+                temperature_C_norm: 0.3767787386, dew_point_C_norm: 0.3455467775, humidity_percent_norm: 0.7724937554, precipitation_mm_norm: 1, 
+                wind_direction_deg_norm: 0.8108971424, wind_speed_kmh_norm: 1, pressure_hPa_norm: 0.8644527085, snow_mm_norm: 0.66843075 },
+            { name: "Harry Reid International Airport", code: "LAS", lat: 36.084, lon: -115.1537, weather_score: 63.99435212, 
+                temperature_C_norm: 0.7715705773, dew_point_C_norm: 0, humidity_percent_norm: 0, precipitation_mm_norm: 0, 
+                wind_direction_deg_norm: 0.4978771284, wind_speed_kmh_norm: 0.4107421195, pressure_hPa_norm: 0.3765737706, snow_mm_norm: 0.8030506995 },
+            { name: "Los Angeles International Airport", code: "LAX", lat: 33.9416, lon: -118.4085, weather_score: 52.76834353, 
+                temperature_C_norm: 0.5935052295, dew_point_C_norm: 0.5865409956, humidity_percent_norm: 0.8592711394, precipitation_mm_norm: 0.1012833479, 
+                wind_direction_deg_norm: 0.244601179, wind_speed_kmh_norm: 0, pressure_hPa_norm: 0.6870557142, snow_mm_norm: 0.4489997165 },
+            { name: "LaGuardia Airport", code: "LGA", lat: 40.7769, lon: -73.8740, weather_score: 68.16787809, 
+                temperature_C_norm: 0.4231443411, dew_point_C_norm: 0.3154368382, humidity_percent_norm: 0.6416939046, precipitation_mm_norm: 0.6179538781, 
+                wind_direction_deg_norm: 0.6967862393, wind_speed_kmh_norm: 0.861487297, pressure_hPa_norm: 0.826512543, snow_mm_norm: 0.4551895855 },
+            { name: "Orlando International Airport", code: "MCO", lat: 28.4312, lon: -81.3081, weather_score: 77.80558686, 
+                temperature_C_norm: 0.8338664441, dew_point_C_norm: 0.8947101578, humidity_percent_norm: 1, precipitation_mm_norm: 0.3535815582, 
+                wind_direction_deg_norm: 0.2763047555, wind_speed_kmh_norm: 0.1727226499, pressure_hPa_norm: 0.952980778, snow_mm_norm: 0.4551895855 },
+            { name: "Miami International Airport", code: "MIA", lat: 25.7617, lon: -80.1918, weather_score: 100, 
+                temperature_C_norm: 1, dew_point_C_norm: 1, humidity_percent_norm: 0.8829744838, precipitation_mm_norm: 0.6982391563, 
+                wind_direction_deg_norm: 0.0180839307, wind_speed_kmh_norm: 0.3154001682, pressure_hPa_norm: 0.9105216314, snow_mm_norm: 0.4551895855 },
+            { name: "Chicago O'Hare International Airport", code: "ORD", lat: 41.9742, lon: -87.9073, weather_score: 72.05224631, 
+                temperature_C_norm: 0.2798977649, dew_point_C_norm: 0.2854348821, humidity_percent_norm: 0.8185654724, precipitation_mm_norm: 0.4758132782, 
+                wind_direction_deg_norm: 0.6744127011, wind_speed_kmh_norm: 0.6924805052, pressure_hPa_norm: 0.8280542654, snow_mm_norm: 1 },
+            { name: "Portland International Airport", code: "PDX", lat: 45.5887, lon: -122.598, weather_score: 56.34295306, 
+                temperature_C_norm: 0.3400173118, dew_point_C_norm: 0.3843968822, humidity_percent_norm: 0.8980780824, precipitation_mm_norm: 0.4502933854, 
+                wind_direction_deg_norm: 0.6087619101, wind_speed_kmh_norm: 0.1908851034, pressure_hPa_norm: 0.9751452655, snow_mm_norm: 0.4551895855 },
+            { name: "Phoenix Sky Harbor International Airport", code: "PHX", lat: 33.4484, lon: -112.0740, weather_score: 60.88266675, 
+                temperature_C_norm: 0.9071144768, dew_point_C_norm: 0.2464908943, humidity_percent_norm: 0.1101676401, precipitation_mm_norm: 0.04203726005, 
+                wind_direction_deg_norm: 0.01748620628, wind_speed_kmh_norm: 0.09102867096, pressure_hPa_norm: 0.2986275884, snow_mm_norm: 0.4551895855 },
+            { name: "Seattle-Tacoma International Airport", code: "SEA", lat: 47.6062, lon: -122.3321, weather_score: 44.88722029, 
+                temperature_C_norm: 0.2896812983, dew_point_C_norm: 0.3579482071, humidity_percent_norm: 0.9342446933, precipitation_mm_norm: 0.5136116062, 
+                wind_direction_deg_norm: 0.1740605485, wind_speed_kmh_norm: 0.3408886015, pressure_hPa_norm: 0.9902555336, snow_mm_norm: 0.07803846177 },
+            { name: "San Francisco International Airport", code: "SFO", lat: 37.7749, lon: -122.4194, weather_score: 54.05837309, 
+                temperature_C_norm: 0.4392731675, dew_point_C_norm: 0.4954595612, humidity_percent_norm: 0.9196826041, precipitation_mm_norm: 0.2295825964, 
+                wind_direction_deg_norm: 1, wind_speed_kmh_norm: 0.6176962503, pressure_hPa_norm: 0.8486477012, snow_mm_norm: 0.4524177169 }
         ];
 
         const map = L.map('map', {
@@ -278,18 +325,18 @@
 
         map.setView([37.0902, -95.7129], 4);
 
-        function getColor(score) {
-            if (score <= 20) return "#00e400";
-            if (score <= 40) return "#ffff00";
-            if (score <= 60) return "#ff7e00";
-            if (score <= 80) return "#ff0000";
+        function getColor(weather_score) {
+            if (weather_score <= 20) return "#00e400";
+            if (weather_score <= 40) return "#ffff00";
+            if (weather_score <= 60) return "#ff7e00";
+            if (weather_score <= 80) return "#ff0000";
             return "#8f3f97";
         }
 
-        function getCircleSize(score) {
+        function getCircleSize(weather_score) {
             const minSize = 5000;
             const maxSize = 100000;
-            return minSize + (maxSize - minSize) * (score / 100);
+            return minSize + (maxSize - minSize) * (weather_score / 100);
         }
 
         function getZoomLevel(circleRadius) {
@@ -305,8 +352,8 @@
         const markers = {};
 
         airports.forEach(airport => {
-            const color = getColor(airport.score);
-            const size = getCircleSize(airport.score);
+            const color = getColor(airport.weather_score);
+            const size = getCircleSize(airport.weather_score);
 
             const marker = L.circle([airport.lat, airport.lon], {
                 color: color,
@@ -317,7 +364,12 @@
             .bindPopup(L.popup({
                 className: 'custom-popup',
                 closeButton: false
-            }).setContent(`<div style='color: white; padding: 5px;'>Score: ${airport.score}</div>`));
+            }).setContent(
+                `<div style='color: white; padding: 5px;'>
+                    <div>${airport.name} (${airport.code})</div>
+                    <div><strong>Score: ${airport.weather_score.toFixed(2)}</strong></div>
+                </div>
+            `));
 
             const popupStyle = document.createElement('style');
             popupStyle.innerHTML = `
@@ -380,8 +432,13 @@
                     color: newColor,
                     fillColor: newColor
                 });
-
-                markerData.marker.setPopupContent(`<b>${airportCode}</b><br>Score: ${newScore}`);
+                
+                markerData.marker.setPopupContent(
+                    `<div style='color: white; padding: 5px;'>
+                        <div>${airport.name} (${airport.code})</div>
+                        <div><strong>Score: ${newScore.toFixed(2)}</strong></div>
+                    </div>
+                `);
             }
         }
 

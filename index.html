@@ -20,7 +20,7 @@
             flex-direction: column;
             align-items: center;
             overflow-x: hidden;
-            overflow-y: hidden;
+            overflow-y: auto;
         }
 
         h1 {
@@ -35,7 +35,7 @@
 
         #map {
             width: 90%;
-            height: 560px;
+            height: 520px;
             margin: 10px auto; 
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
@@ -73,9 +73,10 @@
             display: none;
             position: absolute;
             background: #1a1a1a;
+            bottom: 100%;
+            margin-bottom: 5px;            
             border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);                    
             z-index: 1000;
             max-height: 220px;
             overflow-y: auto;
@@ -100,6 +101,10 @@
 
         .dropdown-item:hover {
             background: #333333;
+        }
+        
+        .dropdown-row {
+            margin-top: 10px;
         }
 
         #key {
@@ -227,6 +232,7 @@
 </head>
 <body>
     <h1>Weather Score Project</h1>
+
     <div id="map"></div>
 
     <h2 style="text-align: center; margin-bottom: -10px; margin-top: -6px; font-size: 16px;">Weather Score</h2>
@@ -243,9 +249,15 @@
         </div>
     </div>
 
-    <div class="dropdown-container">
-        <button class="dropdown-button">Select an airport</button>
-        <div class="dropdown-menu">
+    <div class="dropdown-row">
+        <div class="dropdown-container">
+            <button class="dropdown-button" id="airport-dropdown-button">Select an airport</button>
+            <div class="dropdown-menu" id="airport-dropdown-menu"></div>
+        </div>
+
+        <div class="dropdown-container">
+            <button class="dropdown-button" id="parameter-dropdown-button">Weather Score Radius Parameter</button>
+            <div class="dropdown-menu" id="parameter-dropdown-menu"></div>
         </div>
     </div>
 
@@ -347,9 +359,46 @@
             return maxZoom - ((circleRadius - minSize) / (maxSize - minSize)) * (maxZoom - minZoom);
         }
 
-        const dropdownButton = document.querySelector('.dropdown-button');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
+        function getRadiusForParameter(airport, paramKey) {
+            if (paramKey === "weather_score") { 
+                return getCircleSize(airport.weather_score);
+            } else {                
+                const standardizeVal = airport[paramKey] || 0;
+                return getCircleSize(standardizeVal * 100);
+            }
+        }
+
+        function updateCirclesForParameter(paramKey) {
+            currentParameter = paramKey;
+            airports.forEach(airport => {
+                const markerData = markers[airport.code];
+                if (!markerData) return;
+
+                const newRadius = getRadiusForParameter(airport, paramKey);
+                markerData.marker.setRadius(newRadius);
+                markerData.size = newRadius;
+            });        
+        }        
+
+        const airportDropdownButton = document.getElementById('airport-dropdown-button');
+        const airportDropdownMenu = document.getElementById('airport-dropdown-menu');
+        const parameterDropdownButton = document.getElementById('parameter-dropdown-button');
+        const parameterDropdownMenu = document.getElementById('parameter-dropdown-menu');
         const markers = {};
+
+        const parameterOptions = [
+            { key: 'weather_score', label: 'Weather Score' },
+            { key: 'temperature_C_norm', label: 'Temperature' },
+            { key: 'dew_point_C_norm', label: 'Dew Point' },
+            { key: 'humidity_percent_norm', label: 'Humidity' },
+            { key: 'precipitation_mm_norm', label: 'Precipitation' },
+            { key: 'wind_direction_deg_norm', label: 'Wind Direction' },
+            { key: 'wind_speed_kmh_norm', label: 'Wind Speed' },
+            { key: 'pressure_hPa_norm', label: 'Pressure' },
+            { key: 'snow_mm_norm', label: 'Snow' }
+        ];
+
+        let currentParameter = 'weather_score';
 
         airports.forEach(airport => {
             const color = getColor(airport.weather_score);
@@ -402,13 +451,31 @@
                     map.setView(markerData.marker.getLatLng(), zoomLevel);
                     setTimeout(() => markerData.marker.openPopup(), 100);
                 }
-                dropdownMenu.classList.remove('show');
+                airportDropdownMenu.classList.remove('show');
             });
-            dropdownMenu.appendChild(button);
+            airportDropdownMenu.appendChild(button);
         });
 
-        dropdownButton.addEventListener('click', () => {
-            dropdownMenu.classList.toggle('show');
+        updateCirclesForParameter(currentParameter);
+
+        airportDropdownButton.addEventListener("click", () => {
+            airportDropdownMenu.classList.toggle("show");
+        });
+
+        parameterDropdownButton.addEventListener('click', () => {
+            parameterDropdownMenu.classList.toggle('show');
+        });
+
+        parameterOptions.forEach(opt => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.textContent = opt.label;
+            item.addEventListener('click', () => {
+                parameterDropdownButton.textContent = `Radius: ${opt.label}`;
+                updateCirclesForParameter(opt.key);
+                parameterDropdownMenu.classList.remove('show');
+            });
+            parameterDropdownMenu.appendChild(item);
         });
 
         window.addEventListener('click', (event) => {

@@ -19,30 +19,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-x: hidden;
             overflow-y: hidden;
-            
         }
 
         h1 {
             margin-top: 20px;
+            font-size: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: capitalize;
+            text-align: center;
         }
 
         #map {
             width: 90%;
-            height: 500px;
-            margin: 20px auto;
+            height: 560px;
+            margin: 10px auto; 
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
         }
 
         #dropdown {
-            display: none; /* Hide the default dropdown */
+            display: none;
         }
 
         .dropdown-container {
             position: relative;
             display: inline-block;
+            margin-top: -22px;
         }
 
         .dropdown-button {
@@ -71,8 +77,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             margin-top: 5px;
             z-index: 1000;
-            max-height: 160px; /* Limit to 3.5 items at a time */
-            overflow-y: auto; /* Enable scrolling for additional items */
+            max-height: 220px;
+            overflow-y: auto;
         }
 
         .dropdown-menu.show {
@@ -82,23 +88,22 @@
         .dropdown-item {
             padding: 10px 20px;
             color: #ffffff;
-            text-align: center; /* Centered text */
+            text-align: center;
             cursor: pointer;
             transition: background 0.3s ease;
-            border-bottom: 1px solid white; /* Add white lines between dropdown items */
+            border-bottom: 1px solid white;
         }
 
         .dropdown-item:last-child {
-            border-bottom: none; /* Remove the line for the last item */
+            border-bottom: none;
         }
 
         .dropdown-item:hover {
             background: #333333;
         }
 
-        /* Adjusted styles for the gradient bar and labels */
         #key {
-            margin: 20px auto;
+            margin: 12px auto;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -107,7 +112,7 @@
 
         .key-bar {
             width: 100%;
-            height: 30px;
+            height: 18px;
             background: linear-gradient(to right, #00e400, #a3e400, #ffff00, #ffcc00, #ff7e00, #ff3f00, #ff0000, #a3005c, #8f3f97);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
@@ -123,7 +128,7 @@
         .key-label {
             font-size: 14px;
             color: #ffffff;
-            font-family: inherit; /* Match the font of the dropdown button */
+            font-family: inherit;
             font-weight: 400;
             letter-spacing: 0.5px;
             text-transform: uppercase;
@@ -159,11 +164,8 @@
             background: #555555;
         }
 
-        h1 {
-            display: none;
-        }
 
-        /* Added styles for the reset button */
+
         #reset-view {
             position: absolute;
             top: 10px;
@@ -185,7 +187,7 @@
             text-align: center;
             margin-bottom: -14px;
             font-size: 16px;
-            font-family: inherit; /* Match the font of the dropdown button */
+            font-family: inherit;
             color: #ffffff;
             font-weight: 400;
             letter-spacing: 0.5px;
@@ -197,37 +199,37 @@
 
         .leaflet-control-zoom-in,
         .leaflet-control-zoom-out {
-            background: black !important; /* Black background */
-            color: white !important; /* White symbols */
-            border: none !important; /* Remove gray border */
-            border-radius: 50%; /* Ensure buttons are circular */
-            width: 40px; /* Set equal width and height for perfect circle */
-            height: 40px; /* Set equal width and height for perfect circle */
-            display: flex !important; /* Use flexbox for centering */
-            align-items: center !important; /* Center content vertically */
-            justify-content: center !important; /* Center content horizontally */
-            font-size: 18px; /* Adjust font size */
+            background: black !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 18px;
             cursor: pointer;
-            box-sizing: border-box; /* Ensure padding and border do not affect dimensions */
-            transform: rotate(180deg); /* Flip the circle around the symbols */
+            box-sizing: border-box;
+            transform: rotate(180deg);
         }
 
         .leaflet-bar {
-            border: none !important; /* Remove gray border from leaflet control container */
-            box-shadow: none !important; /* Remove shadow */
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .leaflet-control-custom {
-            border: none !important; /* Remove border from custom control */
-            box-shadow: none !important; /* Remove shadow from custom control */
+            border: none !important;
+            box-shadow: none !important;
         }
     </style>
 </head>
 <body>
-    <h1>Southwest X Aggie Data Science Club</h1>
+    <h1>Weather Score Project</h1>
     <div id="map"></div>
 
-    <h2 style="text-align: center; margin-bottom: -14px; font-size: 16px;">Weather Score</h2>
+    <h2 style="text-align: center; margin-bottom: -10px; margin-top: -6px; font-size: 16px;">Weather Score</h2>
 
     <div id="key">
         <div class="key-bar"></div>
@@ -244,68 +246,73 @@
     <div class="dropdown-container">
         <button class="dropdown-button">Select an airport</button>
         <div class="dropdown-menu">
-            <!-- Airport buttons will be dynamically added here -->
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
     <script>
-        // Example data for airports and their scores
         const airports = [
             { name: "Los Angeles International Airport", code: "LAX", lat: 33.9416, lon: -118.4085, score: 85 },
             { name: "John F. Kennedy International Airport", code: "JFK", lat: 40.6413, lon: -73.7781, score: 70 },
             { name: "Chicago O'Hare International Airport", code: "ORD", lat: 41.9742, lon: -87.9073, score: 90 },
             { name: "Dallas/Fort Worth International Airport", code: "DFW", lat: 32.8998, lon: -97.0403, score: 60 },
-            { name: "Denver International Airport", code: "DEN", lat: 39.8561, lon: -104.6737, score: 50 }
+            { name: "Denver International Airport", code: "DEN", lat: 39.8561, lon: -104.6737, score: 50 },
+            { name: "San Francisco International Airport", code: "SFO", lat: 37.7749, lon: -122.4194, score: 75 },
+            { name: "Seattle-Tacoma International Airport", code: "SEA", lat: 47.6062, lon: -122.3321, score: 65 },
+            { name: "Miami International Airport", code: "MIA", lat: 25.7617, lon: -80.1918, score: 55 },
+            { name: "Hartsfield-Jackson Atlanta International Airport", code: "ATL", lat: 33.6407, lon: -84.4277, score: 95 },
+            { name: "Phoenix Sky Harbor International Airport", code: "PHX", lat: 33.4484, lon: -112.0740, score: 80 }
         ];
 
-        // Initialize map
         const map = L.map('map', {
-            center: [37.0902, -95.7129], // Centered on the US
+            center: [37.0902, -95.7129],
             zoom: 4,
-            attributionControl: false // Disable OpenStreetMap attribution
+            attributionControl: false
         });
 
-        // Add OpenStreetMap tiles with blue oceans
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: ''
         }).addTo(map);
 
-        // Remove the GeoJSON layer logic entirely and set the map view directly
-        map.setView([37.0902, -95.7129], 4); // Centered on the US with zoom level 4
+        map.setView([37.0902, -95.7129], 4);
 
-        // Function to determine circle color based on AQI-like score scaled to 0-100
         function getColor(score) {
-            if (score <= 20) return "#00e400"; // Green
-            if (score <= 40) return "#ffff00"; // Yellow
-            if (score <= 60) return "#ff7e00"; // Orange
-            if (score <= 80) return "#ff0000"; // Red
-            return "#8f3f97"; // Purple
+            if (score <= 20) return "#00e400";
+            if (score <= 40) return "#ffff00";
+            if (score <= 60) return "#ff7e00";
+            if (score <= 80) return "#ff0000";
+            return "#8f3f97";
         }
 
-        // Function to determine circle size based on score (0-100)
         function getCircleSize(score) {
-            const minSize = 5000; // Reduced minimum radius in meters
-            const maxSize = 100000; // Increased maximum radius in meters
+            const minSize = 5000;
+            const maxSize = 100000;
             return minSize + (maxSize - minSize) * (score / 100);
         }
 
-        // Add circles for airports and populate dropdown
+        function getZoomLevel(circleRadius) {
+            const minZoom = 6;
+            const maxZoom = 11;
+            const minSize = 5000;
+            const maxSize = 100000;
+            return maxZoom - ((circleRadius - minSize) / (maxSize - minSize)) * (maxZoom - minZoom);
+        }
+
         const dropdownButton = document.querySelector('.dropdown-button');
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const markers = {};
 
         airports.forEach(airport => {
             const color = getColor(airport.score);
-            const size = getCircleSize(airport.score); // Calculate size based on score
+            const size = getCircleSize(airport.score);
 
             const marker = L.circle([airport.lat, airport.lon], {
                 color: color,
                 fillColor: color,
                 fillOpacity: 0.7,
-                radius: size // Use dynamic size
+                radius: size
             }).addTo(map)
             .bindPopup(L.popup({
                 className: 'custom-popup',
@@ -330,28 +337,28 @@
             `;
             document.head.appendChild(popupStyle);
 
-            markers[airport.code] = marker;
+            markers[airport.code] = { marker: marker, size: size };
 
-            // Add airport to dropdown menu
             const button = document.createElement('div');
             button.className = 'dropdown-item';
             button.textContent = `${airport.name.replace('International Airport', 'International')} (${airport.code})`;
             button.addEventListener('click', () => {
-                const marker = markers[airport.code];
-                if (marker) {
-                    map.setView(marker.getLatLng(), 10); // Zoom to the airport
+                const markerData = markers[airport.code];
+                if (markerData) {
+                    map.closePopup();
+                    const zoomLevel = getZoomLevel(markerData.size);
+                    map.setView(markerData.marker.getLatLng(), zoomLevel);
+                    setTimeout(() => markerData.marker.openPopup(), 100);
                 }
-                dropdownMenu.classList.remove('show'); // Close the dropdown menu
+                dropdownMenu.classList.remove('show');
             });
             dropdownMenu.appendChild(button);
         });
 
-        // Toggle dropdown menu visibility
         dropdownButton.addEventListener('click', () => {
             dropdownMenu.classList.toggle('show');
         });
 
-        // Close dropdown menu if clicked outside
         window.addEventListener('click', (event) => {
             if (!event.target.matches('.dropdown-button')) {
                 const dropdowns = document.getElementsByClassName("dropdown-menu");
@@ -364,33 +371,25 @@
             }
         });
 
-        // Example function to dynamically update scores and circle colors
         function updateAirportScore(airportCode, newScore) {
             if (markers[airportCode]) {
-                const marker = markers[airportCode];
+                const markerData = markers[airportCode];
                 const newColor = getColor(newScore);
 
-                // Update marker color
-                marker.setStyle({
+                markerData.marker.setStyle({
                     color: newColor,
                     fillColor: newColor
                 });
 
-                // Update popup content
-                marker.setPopupContent(`<b>${airportCode}</b><br>Score: ${newScore}`);
+                markerData.marker.setPopupContent(`<b>${airportCode}</b><br>Score: ${newScore}`);
             }
         }
 
-        // Example usage of dynamic update
-        // updateAirportScore('LAX', 45); // Uncomment to test dynamic update
-
-        // Define the original view coordinates and zoom level
         const originalView = {
-            center: [37.0902, -95.7129], // Centered on the US
+            center: [37.0902, -95.7129],
             zoom: 4
         };
 
-        // Add a custom control for the Reset View button
         const resetControl = L.control({ position: 'topleft' });
 
         resetControl.onAdd = function () {
@@ -402,7 +401,25 @@
             return div;
         };
 
+        function adjustMapHeightToKey() {
+            const mapEl = document.getElementById('map');
+            const keyBar = document.querySelector('.key-bar');
+            if (!mapEl || !keyBar) return;
+            const mapRect = mapEl.getBoundingClientRect();
+            const keyRect = keyBar.getBoundingClientRect();
+            const desiredHeight = Math.max(200, Math.round(keyRect.bottom - mapRect.top));
+            mapEl.style.height = desiredHeight + 'px';
+            if (map && typeof map.invalidateSize === 'function') {
+                map.invalidateSize();
+            }
+        }
+
         resetControl.addTo(map);
+
+        window.addEventListener('resize', () => {
+            setTimeout(adjustMapHeightToKey, 50);
+        });
+        setTimeout(adjustMapHeightToKey, 100);
     </script>
 </body>
 </html>
